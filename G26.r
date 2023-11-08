@@ -16,12 +16,24 @@
 # Define the function 'netup'.
 netup <- function(d){
   ## argument d is a vector of number of nodes in each layer of a network
+  # Initialize the node values, weights, and offset parameters
+  h <- vector("list", length(d))
+  W <- list()
+  b <- list()
   
+  # Initialize node values for each layer as zero vectors
+  for (i in 1:length(d)) {
+  h[[i]] <- numeric(d[i])
+  }
+  # Initialize weights and  offset parameters with random values between 0 and 0.2
+  for (i in 1:(length(d) - 1)) {
+    W[[i]] <- matrix(runif(d[i] * d[i+1], 0, 0.2), nrow = d[i], ncol = d[i+1])
+    b[[i]] <- runif(d[i+1], 0, 0.2)
+  }
   
-  
-  
-  
-  return(list(h=h,W=W,b=b))
+  # Return h, W, b as a list
+  return(list(h = h, W = W, b = b))
+}
   ## This function returns a list representing the network
   ## h a list of nodes for each layer. 
   ## W a list of weight matrices. 
