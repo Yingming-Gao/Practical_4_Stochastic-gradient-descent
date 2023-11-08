@@ -13,30 +13,42 @@
 # Details:
 ##
 
-# Define the function 'netup'.
+# Define the function 'netup' to initialize the network.
 netup <- function(d){
-  ## argument d is a vector of number of nodes in each layer of a network
+  ## Argument d is a vector of number of nodes in each layer of a network.
+  ## Set a seed for random process.
+  set.seed(0)
+  
+  ## Initialize an empty network list for storing hole network.
   nn <- list()
-  nn$h <- vector("list", length(d))
-  for (l in 1:length(d)) {
-     # Initialize node values for each layer as zero vectors
-    nn$h[[l]] <- numeric(d[l]) 
-  }
-  # Initialize weights and offset parameters
+  
+  ## Initialize empty lists for nodes values, weights and offset parameters.
+  ## h is a list of nodes for each layer.
+  nn$h <- list()
+  ## W is a list of weight matrices. 
   nn$W <- list()
+  ## b is a list of offset vectors.
   nn$b <- list()
-  # Initialize weights and  offset parameters with random values between 0 and 0.2
+  
+  ## Initialize node values of each layer with zero values.
+  ## h[[l]] should be a vector contain the node values for layer l.
+  for (l in 1:length(d)) {nn$h[[l]] <- matrix(numeric(d[l]), ncol = 1)}
+  
+  ## Initialize weights and offsets with random values between 0 and 0.2.
   for (l in 1:(length(d) - 1)) {
-    nn$W[[l]] <- matrix(runif(d[l] * d[l+1], 0, 0.2), nrow = d[l], ncol = d[l+1])
-    nn$b[[l]] <- runif(d[l+1], 0, 0.2)
+    ## W[[l]] is the weight matrix linking layer l to layer l+1.
+    ## Its dimension should be d[l+1] * d[l].
+    nn$W[[l]] <- matrix(runif(d[l]*d[l+1], 0, 0.2), nrow = d[l+1], ncol = d[l])
+    
+    ## b[[l]] is the offset vector linking layer l to layer l+1.
+    ## Its dimension should be d[l+1] * 1.
+    nn$b[[l]] <- matrix(runif(d[l+1], 0, 0.2), ncol = 1)
   }
   
+  ## This function returns a list representing the network.
   return(nn)
 }
-  ## This function returns a list representing the network
-  ## h a list of nodes for each layer. 
-  ## W a list of weight matrices. 
-  ## b a list of offset vectors.
+
 
 # Define the function 'forward'.
 forward <- function(nn,inp){
@@ -53,11 +65,12 @@ forward <- function(nn,inp){
     h_values <- pmax(0, h_i) 
     # Store the values in h for the next layer
     nn$h[[i + 1]] <- h_values  
-  
+  }
   return(nn)
   ## This function compute the remaining node values implied by inp.
   ## Then return the updated network list
 }
+
 
 # Define the function 'backward'.
 backward <- function(nn,k){
