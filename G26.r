@@ -95,6 +95,8 @@ train <- function(nn,inp,k,eta=.01,mb=10,nstep=10000){
   ## mb is the number of data to randomly sample to compute the gradient. 
   ## nstep is the number of optimization steps to take.
   
+  
+  
   return(nn)
   # Return the trained network.
 }
