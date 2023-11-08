@@ -50,25 +50,28 @@ netup <- function(d){
 }
 
 
-# Define the function 'forward'.
+# Define the function 'forward' to calculate node values.
 forward <- function(nn,inp){
-  ## nn is a network list as returned by netup.
+  ## nn is a network list as returned by 'netup' function.
   ## inp is a vector of input values for the first layer.
   
-  # Initialize the first layer's values with input inp
+  # Assign the input values to the first layer.
   nn$h[[1]] <- inp
-  # Forward pass: compute the values for each layer
-  for (i in 1:(length(nn$W))) {
-    # Calculate the values of linearity
-    h_i <- nn$h[[i]] %*% nn$W[[i]] + nn$b[[i]] 
-    # Apply ReLU activation function
-    h_values <- pmax(0, h_i) 
-    # Store the values in h for the next layer
-    nn$h[[i + 1]] <- h_values  
+  
+  # Forward pass: compute the values in subsequent layers.
+  for (l in 1:(length(nn$h)-1)){
+    # Calculate the l+1 layer by using W_l * h_l + b_l.
+    h_l_1 <- nn$W[[l]] %*% nn$h[[l]] + nn$b[[l]] 
+    
+    # Apply ReLU activation function: max(0,h₁₊₁)
+    h_l_1 <- pmax(0, h_l_1) 
+    
+    # Store the calculated values as a vector in h₁₊₁ layer.
+    nn$h[[l+1]] <- matrix(h_l_1, ncol = 1)
   }
+  
+  ## This function returns the updated network list.
   return(nn)
-  ## This function compute the remaining node values implied by inp.
-  ## Then return the updated network list
 }
 
 
