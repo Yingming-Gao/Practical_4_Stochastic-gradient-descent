@@ -16,37 +16,43 @@
 # Define the function 'netup'.
 netup <- function(d){
   ## argument d is a vector of number of nodes in each layer of a network
-  # Initialize the node values, weights, and offset parameters
-  h <- vector("list", length(d))
-  W <- list()
-  b <- list()
-  
-  # Initialize node values for each layer as zero vectors
-  for (i in 1:length(d)) {
-  h[[i]] <- numeric(d[i])
+  nn <- list()
+  nn$h <- vector("list", length(d))
+  for (l in 1:length(d)) {
+     # Initialize node values for each layer as zero vectors
+    nn$h[[l]] <- numeric(d[l]) 
   }
+  # Initialize weights and offset parameters
+  nn$W <- list()
+  nn$b <- list()
   # Initialize weights and  offset parameters with random values between 0 and 0.2
-  for (i in 1:(length(d) - 1)) {
-    W[[i]] <- matrix(runif(d[i] * d[i+1], 0, 0.2), nrow = d[i], ncol = d[i+1])
-    b[[i]] <- runif(d[i+1], 0, 0.2)
+  for (l in 1:(length(d) - 1)) {
+    nn$W[[l]] <- matrix(runif(d[l] * d[l+1], 0, 0.2), nrow = d[l], ncol = d[l+1])
+    nn$b[[l]] <- runif(d[l+1], 0, 0.2)
   }
   
-  # Return h, W, b as a list
-  return(list(h = h, W = W, b = b))
+  return(nn)
 }
   ## This function returns a list representing the network
   ## h a list of nodes for each layer. 
   ## W a list of weight matrices. 
   ## b a list of offset vectors.
-}
 
 # Define the function 'forward'.
 forward <- function(nn,inp){
   ## nn is a network list as returned by netup.
   ## inp is a vector of input values for the first layer.
   
-  
-  
+  # Initialize the first layer's values with input inp
+  nn$h[[1]] <- inp
+  # Forward pass: compute the values for each layer
+  for (i in 1:(length(nn$W))) {
+    # Calculate the values of linearity
+    h_i <- nn$h[[i]] %*% nn$W[[i]] + nn$b[[i]] 
+    # Apply ReLU activation function
+    h_values <- pmax(0, h_i) 
+    # Store the values in h for the next layer
+    nn$h[[i + 1]] <- h_values  
   
   return(nn)
   ## This function compute the remaining node values implied by inp.
