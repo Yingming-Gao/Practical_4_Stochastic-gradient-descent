@@ -107,3 +107,59 @@ train <- function(nn,inp,k,eta=.01,mb=10,nstep=10000){
 
 # Classify the test data to species according to the class predicted.
 # Compute the misclassification rate.
+
+backward <- function(nn, k) {
+  L <- length(nn$W) + 1  # number of layers, including input
+  n <- length(nn$h[[L]]) # number of output nodes
+  
+  # Step 2: Initialize derivative of loss wrt output layer
+  dL_dh <- exp(nn$h[[L]]) / sum(exp(nn$h[[L]]))
+  dL_dh[k] <- dL_dh[k] - 1
+  
+  # Backpropagation
+  for (l in (L - 1):2) {
+    dh_next <- dL_dh
+    dh_current <- nn$W[[l - 1]] %*% dh_next
+    
+    relu_grad <- as.numeric(nn$h[[l]] > 0)
+    dL_dh <- relu_grad * dh_current
+    
+    nn$dh[[l - 1]] <- dL_dh
+    nn$dW[[l - 1]] <- dh_next %*% t(nn$h[[l - 1]])
+    nn$db[[l - 1]] <- dh_next
+  }
+  
+  return(nn)
+}
+
+train <- function(nn, inp, k, eta = 0.01, mb = 10, nstep = 10000) {
+  n <- nrow(inp)
+  
+  for (step in 1:nstep) {
+    # Sample minibatch
+    idx <- sample(1:n, mb)
+    inp_mb <- inp[idx, ]
+    k_mb <- k[idx]
+    
+    # Initialize gradients
+    for (l in 1:(length(nn$h) - 1)) {
+      nn$dh[[l]] <- matrix(0, nrow = ncol(nn$W[[l]]), ncol = mb)
+      nn$dW[[l]] <- matrix(0, nrow = nrow(nn$W[[l]]), ncol = ncol(nn$W[[l]]))
+      nn$db[[l]] <- rep(0, ncol(nn$W[[l]]))
+    }
+    
+    # Compute gradients for each sample in minibatch
+    for (i in 1:mb) {
+      nn <- forward(nn, inp_mb[i, ])
+      nn <- backward(nn, k_mb[i])
+    }
+    
+    # Update parameters
+    for (l in 1:(length(nn$h) - 1)) {
+      nn$W[[l]] <- nn$W[[l]] - eta * nn$dW[[l]] / mb
+      nn$b[[l]] <- nn$b[[l]] - eta * nn$db[[l]] / mb
+    }
+  }
+  
+  return(nn)
+}
