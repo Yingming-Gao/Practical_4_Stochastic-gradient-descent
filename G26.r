@@ -163,3 +163,36 @@ train <- function(nn, inp, k, eta = 0.01, mb = 10, nstep = 10000) {
   
   return(nn)
 }
+
+
+
+
+##修改版backward
+backward <- function(nn, k) {
+  # 初始化空列表以存储梯度
+  nn$dh <- vector("list", length(nn$h))
+  nn$dW <- vector("list", length(nn$W))
+  nn$db <- vector("list", length(nn$b))
+  d <- vector("list", length(nn$h))
+  # 计算损失函数对于 hL_j 的导数
+  q <- exp(nn$h[[length(nn$h)]])
+  nn$dh[[length(nn$dh)]] <- q / sum(q)
+  nn$dh[[length(nn$dh)]][k] <- nn$dh[[length(nn$dh)]][k] - 1
+  
+  # 对最后一层的导数进行ReLU判断
+  d[[length(nn$dh)]] <- pmax(0, nn$dh[[length(nn$dh)]]) # 
+  
+  # 通过反向传播计算 Li 对于所有其他 hl_j 的导数
+  for (l in (length(nn$h) - 1):1) {
+    nn$dh[[l]] <-  (t(nn$W[[l]]) %*% d[[l + 1]]) 
+    nn$dW[[l]] <- d[[l + 1]] %*% t(nn$h[[l]])
+    nn$db[[l]] <- d[[l + 1]]
+    d[[l]] <- pmax(0,t(nn$W[[l]]) %*% d[[l+1]] )
+  }
+}
+
+
+
+
+
+
