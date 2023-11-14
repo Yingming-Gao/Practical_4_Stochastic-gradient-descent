@@ -167,7 +167,6 @@ train <- function(nn, inp, k, eta = 0.01, mb = 10, nstep = 10000) {
 
 
 
-##修改版backward
 backward <- function(nn, k) {
   # 初始化空列表以存储梯度
   nn$dh <- vector("list", length(nn$h))
@@ -180,15 +179,18 @@ backward <- function(nn, k) {
   nn$dh[[length(nn$dh)]][k] <- nn$dh[[length(nn$dh)]][k] - 1
   
   # 对最后一层的导数进行ReLU判断
-  d[[length(nn$dh)]] <- pmax(0, nn$dh[[length(nn$dh)]]) # 
+  d[[length(nn$dh)]] <- pmax(0, nn$dh[[length(nn$dh)]]) 
   
   # 通过反向传播计算 Li 对于所有其他 hl_j 的导数
-  for (l in (length(nn$h) - 1):1) {
-    nn$dh[[l]] <-  (t(nn$W[[l]]) %*% d[[l + 1]]) 
+  for (l in (length(nn$h)-1) :1) {
+    nn$dh[[l]] <-  t(nn$W[[l]]) %*% d[[l + 1]]
     nn$dW[[l]] <- d[[l + 1]] %*% t(nn$h[[l]])
     nn$db[[l]] <- d[[l + 1]]
     d[[l]] <- pmax(0,t(nn$W[[l]]) %*% d[[l+1]] )
+    
+   
   }
+  return(nn)
 }
 
 
@@ -205,7 +207,7 @@ train <- function(nn, inp, k, eta=.01, mb=10, nstep=10000) {
       nn <- forward(nn, sampled_inp[i,])
       nn <- backward(nn, sampled_k[i])
       # 计算梯度的平均值并更新参数
-      for (l in 1:(length(nn$W) - 1)) {
+      for (l in 1:(length(nn$W))) {
         nn$W[[l]] <- nn$W[[l]] - eta * nn$dW[[l]]
         nn$b[[l]] <- nn$b[[l]] - eta * nn$db[[l]]
       }
