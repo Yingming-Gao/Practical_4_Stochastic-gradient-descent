@@ -193,6 +193,33 @@ backward <- function(nn, k) {
 
 
 
+train <- function(nn, inp, k, eta=.01, mb=10, nstep=10000) {
+  for (step in 1:nstep) {
+    # 随机选择 mb 个数据点
+    indices <- sample(1:nrow(inp), mb)
+    sampled_inp <- inp[indices,]
+    sampled_k <- k[indices]
+    
+    # 执行前向和后向传播
+    for (i in 1:mb) {
+      nn <- forward(nn, sampled_inp[i,])
+      nn <- backward(nn, sampled_k[i])
+      # 计算梯度的平均值并更新参数
+      for (l in 1:(length(nn$W) - 1)) {
+        nn$W[[l]] <- nn$W[[l]] - eta * nn$dW[[l]]
+        nn$b[[l]] <- nn$b[[l]] - eta * nn$db[[l]]
+      }
+    }
+  }
+    
+   
+  return(nn)
+  
+  
+  
+}
+
+
 
 
 
