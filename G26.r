@@ -5,13 +5,23 @@
 ## https://github.com/Yingming-Gao/Practical_4_Stochastic-gradient-descent.git
 
 # The contributions of our team members:
-## 
+
 
 # Overview:
-##
+## This model implements a simple neural network for classification，and train it using stochastic gradient descent.
+## The network adjusts its weight and offset parameters through forward function, backward function and train function.
+## The structure and initialization of the network are defined by the netup function.
+## Finally, the code uses iris data set to train and test the network, and calculates the misclassification rate.
 
 # Details:
-##
+## 1) Function netup: Initialize the network. Parameter d is a vector, which represents the number of nodes in each layer of the network.
+##    This function creates an empty network with node values (h), weights (w) and offsets (b). 
+##    The weights and offsets are initialized with random numbers between 0 and 0.2.
+## 2) Function forward: Forward propagation. This function accepts the input value inp of the network nn and updates the node value 
+##    of the network through layer-by-layer calculation. ReLU transform is applied to the output of each layer.
+## 3) Function backward: This function calculates the derivatives of the loss respect to the output class' k'. This includes calculating the
+##    derivatives of nodes, weights and offsets relative to the network, and adding these derivatives to the network structure as lists dh, dW and db.
+## 4) Function train：This function receives the rows of the input data matrix inp as input, and uses the corresponding labels (such as 1, 2, 3, etc.) in the vector K for training.
 
 # Define the function 'netup' to initialize the network.
 netup <- function(d){
