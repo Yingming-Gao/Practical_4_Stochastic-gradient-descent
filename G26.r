@@ -145,7 +145,7 @@ train <- function(nn,inp,k,eta=.01,mb=10,nstep=10000){
     batch <- list()
     for (l in 1:(length(nn$h) - 1)) {
       batch$dW[[l]] <- matrix(0, nrow = nrow(nn$W[[l]]), ncol = ncol(nn$W[[l]]))
-      batch$db[[l]] <- matrix(0, nrow = nrow(nn$b[[l]]), ncol = ncol(nn$b[[l]]))
+      batch$db[[l]] <- rep(0, length(nn$b[[l]]))
     }
     
     # Compute gradients for the entire minibatch
