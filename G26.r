@@ -42,7 +42,7 @@ netup <- function(d){
   
   ## Initialize node values of each layer with zero values.
   ## h[[l]] should be a vector contain the node values for layer l.
-  for (l in 1:length(d)) {nn$h[[l]] <- matrix(numeric(d[l]), ncol = 1)}
+  for (l in 1:length(d)) {nn$h[[l]] <- numeric(d[l])}
   
   ## Initialize weights and offsets with random values between 0 and 0.2.
   for (l in 1:(length(d) - 1)) {
@@ -52,7 +52,7 @@ netup <- function(d){
     
     ## b[[l]] is the offset vector linking layer l to layer l+1.
     ## Its dimension should be d[l+1] * 1.
-    nn$b[[l]] <- matrix(runif(d[l+1], 0, 0.2), ncol = 1)
+    nn$b[[l]] <- runif(d[l+1], 0, 0.2)
   }
   
   ## This function returns a list representing the network.
@@ -150,7 +150,7 @@ train <- function(nn,inp,k,eta=.01,mb=10,nstep=10000){
     
     # Compute gradients for the entire minibatch
     for (i in 1:mb) {
-      nn <- forward(nn, t(inp_mb[i, ]))
+      nn <- forward(nn, as.vector(inp_mb[i, ]))
       nn <- backward(nn, k_mb[i])
       
       for (l in 1:(length(nn$h) - 1)) {
@@ -181,8 +181,8 @@ train <- function(nn,inp,k,eta=.01,mb=10,nstep=10000){
 data ("iris")
 
 # Divide the iris data into training data and test data
-test_input <- iris[seq(5, nrow(iris), by = 5), -ncol(iris)]
-training_input <- iris[-seq(5, nrow(iris), by = 5), -ncol(iris)]
+test_input <- as.matrix(iris[seq(5, nrow(iris), by = 5), -ncol(iris)])
+training_input <- as.matrix(iris[-seq(5, nrow(iris), by = 5), -ncol(iris)])
 
 # Ensure test values are numeric
 test_out <- as.integer(iris[seq(5, nrow(iris), by = 5), ncol(iris)])
@@ -198,7 +198,7 @@ nn = train(nn,training_input,training_out)
 # Compute the misclassification rate.
 pre = matrix(0,nrow = 30, ncol = 1)
 for (i in 1:30){
-  a = t(as.matrix(test_input[i,]))
+  a = as.vector(test_input[i,])
   
   prediction = forward(nn,a)$h[[4]]
   pre[i,1] = which.max(prediction)
