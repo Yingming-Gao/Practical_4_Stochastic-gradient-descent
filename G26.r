@@ -5,25 +5,35 @@
 ## https://github.com/Yingming-Gao/Practical_4_Stochastic-gradient-descent.git
 
 # The contributions of our team members:
-## Member 1(30%):Jin Lu--Takes charge of initialization coding in this model, provides valuable ideas during discussions.
-## Member 2(30%):Yingming Gao--Plays a crucial role in debugging and determining the final version.
-## Member 3(40%):Mingxi Liu--Responsible for main function coding. Contributes to debugging efforts.
+## Jin Lu(30%)--Takes charge of initialization coding in this model.
+## Yingming Gao(30%)--Plays a crucial role in debugging and determining the final version.
+## Mingxi Liu(40%)--Responsible for main function coding. Contributes to debugging efforts.
 
 # Overview:
-## This model implements a simple neural network for classification，and train it using stochastic gradient descent.
-## The network adjusts its weight and offset parameters through forward function, backward function and train function.
-## The structure and initialization of the network are defined by the netup function.
-## Finally, the code uses iris data set to train and test the network, and calculates the misclassification rate.
+
+## This model implements a simple neural network for classification tasks, 
+## trained using stochastic gradient descent. 
+## The network adjusts its weight and bias parameters through a series of functions: 
+## forward propagation, backward propagation, and a training function. 
+## The structure and initialization of the network are defined by the netup function. 
+## Finally, the code is applied to the Iris dataset for training and testing the network, 
+## and the misclassification rate is calculated.
+
+## Here are the detailed steps:
 
 # Details:
-## 1) Function netup: Initialize the network. Parameter d is a vector, which represents the number of nodes in each layer of the network.
-##    This function creates an empty network with node values (h), weights (w) and offsets (b). 
-##    The weights and offsets are initialized with random numbers between 0 and 0.2.
-## 2) Function forward: Forward propagation. This function accepts the input value inp of the network nn and updates the node value 
-##    of the network through layer-by-layer calculation. ReLU transform is applied to the output of each layer.
-## 3) Function backward: This function calculates the derivatives of the loss respect to the output class' k'. This includes calculating the
-##    derivatives of nodes, weights and offsets relative to the network, and adding these derivatives to the network structure as lists dh, dW and db.
-## 4) Function train：This function receives the rows of the input data matrix inp as input, and uses the corresponding labels (such as 1, 2, 3, etc.) in the vector K for training.
+## 1. Set up the network structure (netup function). This function takes a vector as input, 
+##    with each element representing the number of nodes in each layer of the network.
+## 2. Execute forward propagation (forward function). This function takes a network 
+##    (returned by the netup function) and input values for the input layer, 
+##    calculates the node values for the remaining layers based on these inputs, 
+##    and returns the updated network.
+## 3. Execute backward propagation (backward function). This function calculates 
+##    the derivative of the loss function with respect to output class k and adds 
+##    the derivative values to the network list.
+## 4. Train the network (train function). This function trains the network by using iris data, 
+##    and adjusts the network parameters to minimize the loss using stochastic gradient descent.
+## 5. Test the network and calculate the misclassification rate.
 
 # Define the function 'netup' to initialize the network.
 netup <- function(d){
