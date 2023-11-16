@@ -99,11 +99,13 @@ backward <- function(nn,k){
     # The relevant derivatives should be set to 0
     dh_l_1 <- dh_l_1 * (nn$h[[l+1]] > 0)
     dh_l <- t(nn$W[[l]]) %*% dh_l_1
-    
+    # Compute the derivative of h  
     nn$dh[[l]] <- dh_l
+    # Compute the derivative of W
     nn$dW[[l]] <- dh_l_1 %*% t(nn$h[[l]])
+    # Compute the derivative of b
     nn$db[[l]] <- dh_l_1
-    
+    # Update the d
     dh_l_1 <- dh_l
   }
   
@@ -114,53 +116,53 @@ backward <- function(nn,k){
 
 # Define the function 'train'.
 train <- function(nn,inp,k,eta=.01,mb=10,nstep=10000){
-  ## This function train the network, nn, given input data in the matrix inp 
-  ## and corresponding labels (1, 2, 3 . . . ) in vector k. 
+  ## This function trains the neural network, nn, with the given input data in the matrix inp,
+  ## and corresponding labels (1, 2, 3 . . . ) in the vector k.
   ## eta is the step size η.
-  ## mb is the number of data to randomly sample to compute the gradient. 
+  ## mb is the number of data to randomly sample for computing the gradient.
   ## nstep is the number of optimization steps to take.
   
-  ## Set a seed for random process.
+  ## Set a seed to ensure reproducibility in random processes.
   set.seed(0)
   
+  # Get the number of rows in the input data
   n <- nrow(inp)
   
   for (step in 1:nstep) {
-    # Sample minibatch
+    # Sample a minibatch from the input data
     idx <- sample(1:n, mb)
     inp_mb <- inp[idx, ]
     k_mb <- k[idx]
     
-    # Initialize a list to store batch gradients
+    # Initialize a list to store the gradients for the entire minibatch
     batch <- list()
     for (l in 1:(length(nn$h) - 1)) {
       batch$dW[[l]] <- matrix(0, nrow = nrow(nn$W[[l]]), ncol = ncol(nn$W[[l]]))
       batch$db[[l]] <- rep(0, length(nn$b[[l]]))
     }
     
-    # Compute gradients for the entire minibatch
+    # Compute the gradients for each data point in the minibatch
     for (i in 1:mb) {
-      nn <- forward(nn, as.vector(inp_mb[i, ]))
-      nn <- backward(nn, k_mb[i])
+      nn <- forward(nn, as.vector(inp_mb[i, ])) # Propagate the input forward through the network
+      nn <- backward(nn, k_mb[i]) # Compute the gradients by backpropagation
       
+      # Accumulate the gradients for the entire minibatch
       for (l in 1:(length(nn$h) - 1)) {
         batch$dW[[l]] <- batch$dW[[l]] + nn$dW[[l]]
         batch$db[[l]] <- batch$db[[l]] + nn$db[[l]]
       }
     }
     
-    # Update parameters
+    # Update the network parameters using the mean of the batch gradients
     for (l in 1:(length(nn$h) - 1)) {
-      nn$W[[l]] <- nn$W[[l]] - eta * batch$dW[[l]] / mb
-      nn$b[[l]] <- nn$b[[l]] - eta * batch$db[[l]] / mb
+      nn$W[[l]] <- nn$W[[l]] - eta * batch$dW[[l]] / mb # Update the W
+      nn$b[[l]] <- nn$b[[l]] - eta * batch$db[[l]] / mb # Update the b
     }
     
   }
   
-  return(nn)
-  # Return the trained network.
+  return(nn) # Return the trained network.
 }
-
 
 # Assume compute_loss function is defined to compute the loss of the model
 # based on the current parameters and the entire dataset.
@@ -197,3 +199,4 @@ for (i in 1:30){
 # Print the misclassification rate
 misclassification_rate <- sum(pre != test_out) / length(test_out)
 cat("Misclassification Rate:", misclassification_rate, "\n")
+
