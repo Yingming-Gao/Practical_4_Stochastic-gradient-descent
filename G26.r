@@ -1,11 +1,13 @@
 # The names and university user names of each member of the 26th group:
-## Jin Lu(s2595995); Mingxi Liu(s2400115); Yingming Gao(s2601869)
+## Jin Lu(s2595995); Yingming Gao(s2601869); Mingxi Liu(s2400115); 
 
 # The address of our github repo:
 ## https://github.com/Yingming-Gao/Practical_4_Stochastic-gradient-descent.git
 
 # The contributions of our team members:
-
+## Member 1(30%):Jin Lu--Takes charge of initialization coding in this model, provides valuable ideas during discussions.
+## Member 2(30%):Yingming Gao--Plays a crucial role in debugging and determining the final version.
+## Member 3(40%):Mingxi Liu--Responsible for main function coding. Contributes to debugging efforts.
 
 # Overview:
 ## This model implements a simple neural network for classification，and train it using stochastic gradient descent.
