@@ -71,7 +71,7 @@ forward <- function(nn,inp){
     h_l_1 <- pmax(0, h_l_1) 
     
     # Store the calculated values as a vector in h₁₊₁ layer.
-    nn$h[[l+1]] <- matrix(h_l_1, ncol = 1)
+    nn$h[[l+1]] <- h_l_1
   }
   
   ## This function returns the updated network list.
