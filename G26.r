@@ -34,14 +34,6 @@ netup <- function(d){
   ## Initialize an empty network list for storing hole network.
   nn <- list()
   
-  ## Initialize empty lists for nodes values, weights and offset parameters.
-  ## h is a list of nodes for each layer.
-  nn$h <- vector("list", length = length(d))
-  ## W is a list of weight matrices. 
-  nn$W <- vector("list", length = length(d) - 1)
-  ## b is a list of offset vectors.
-  nn$b <- vector("list", length = length(d) - 1)
-  
   ## Initialize node values of each layer with zero values.
   ## h[[l]] should be a vector contain the node values for layer l.
   for (l in 1:length(d)) {nn$h[[l]] <- numeric(d[l])}
@@ -94,11 +86,7 @@ backward <- function(nn,k){
   
   ## Get the number of layers, including input layer
   L <- length(nn$h) 
-  
-  nn$dW <- vector("list", length = L - 1)
-  nn$db <- vector("list", length = L - 1)
-  nn$dh <- vector("list", length = L)
-  
+
   # Initialize derivatives of loss w.r.t the output layer
   dh_l_1 <- exp(nn$h[[L]]) / sum(exp(nn$h[[L]]))
   # The derivative w.r.t the node of class k is different
